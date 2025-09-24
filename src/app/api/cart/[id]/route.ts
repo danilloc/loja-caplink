@@ -1,13 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params; // agora é Promise
   const body = await req.json().catch(() => ({}));
   const action = body.action || "decrement"; // padrão = diminuir
 
   const item = await prisma.cartItem.findUnique({ where: { id } });
-  if (!item) return NextResponse.json({ error: "Item não encontrado" }, { status: 404 });
+  if (!item) {
+    return NextResponse.json({ error: "Item não encontrado" }, { status: 404 });
+  }
 
   if (action === "increment") {
     const updated = await prisma.cartItem.update({
@@ -29,8 +34,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params; // também Promise
   await prisma.cartItem.delete({ where: { id } });
   return NextResponse.json({ message: "Item excluído" });
 }
