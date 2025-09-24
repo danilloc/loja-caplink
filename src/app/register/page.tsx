@@ -37,12 +37,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          password: form.password,
-          role: form.role,
-        }),
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
@@ -74,7 +69,9 @@ export default function RegisterPage() {
 
         {/* Lado direito */}
         <div className="flex-1 p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">📝 Cadastro</h1>
+          <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
+            📝 Cadastro
+          </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -82,7 +79,7 @@ export default function RegisterPage() {
               placeholder="Nome completo"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
             <input
@@ -90,7 +87,7 @@ export default function RegisterPage() {
               placeholder="Email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
             <input
@@ -98,7 +95,7 @@ export default function RegisterPage() {
               placeholder="Senha"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
             <input
@@ -108,13 +105,13 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setForm({ ...form, confirmPassword: e.target.value })
               }
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="">Selecione...</option>
               <option value="CLIENTE">Cliente</option>

@@ -51,7 +51,9 @@ export default function LoginPage() {
 
         {/* Lado direito */}
         <div className="flex-1 p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">🔑 Login</h1>
+          <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
+            🔑 Login
+          </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -59,14 +61,14 @@ export default function LoginPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <input
               type="password"
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
             {error && (
