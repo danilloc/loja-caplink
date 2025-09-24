@@ -3,6 +3,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
+interface TopProduct {
+  id: string;
+  name: string;
+  imageUrl: string;
+}
+
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user || session.user.role !== "VENDEDOR") {
@@ -35,7 +41,7 @@ export async function GET() {
     productSales[s.productId] = (productSales[s.productId] || 0) + s.quantity;
   }
 
-  let topProduct: any = null;
+  let topProduct: TopProduct | null = null;
   if (Object.keys(productSales).length > 0) {
     const bestId = Object.entries(productSales).sort((a, b) => b[1] - a[1])[0][0];
     topProduct = await prisma.product.findUnique({

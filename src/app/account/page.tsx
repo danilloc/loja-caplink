@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
+import Image from "next/image";
+import { User, Product, Order } from "@/types";
 
 export default function AccountPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"profile" | "orders">("profile");
 
@@ -47,16 +49,14 @@ export default function AccountPage() {
       <div className="flex gap-4 border-b mb-6">
         <button
           onClick={() => setTab("profile")}
-          className={`px-4 py-2 ${tab === "profile" ? "border-b-2 border-blue-600 font-bold" : ""
-            }`}
+          className={`px-4 py-2 ${tab === "profile" ? "border-b-2 border-blue-600 font-bold" : ""}`}
         >
           Perfil
         </button>
         {user?.role === "CLIENTE" && (
           <button
             onClick={() => setTab("orders")}
-            className={`px-4 py-2 ${tab === "orders" ? "border-b-2 border-blue-600 font-bold" : ""
-              }`}
+            className={`px-4 py-2 ${tab === "orders" ? "border-b-2 border-blue-600 font-bold" : ""}`}
           >
             Meus Pedidos
           </button>
@@ -74,13 +74,13 @@ export default function AccountPage() {
           {user.role === "VENDEDOR" && (
             <>
               <h2 className="text-xl font-semibold mt-6 mb-2">Produtos desativados</h2>
-              {user.products.length === 0 ? (
+              {user.products && user.products.length === 0 ? (
                 <p>Nenhum produto desativado.</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {user.products.map((p: any) => (
+                  {user.products?.map((p: Product) => (
                     <div key={p.id} className="border rounded-lg p-4 shadow bg-white">
-                      <img src={p.imageUrl} alt={p.name} className="w-full h-32 object-cover mb-3" />
+                      <Image src={p.imageUrl} alt={p.name} width={200} height={150} className="w-full h-32 object-cover mb-3" />
                       <h3 className="font-bold">{p.name}</h3>
                       <p className="text-sm text-gray-600">{p.description}</p>
                       <button
@@ -124,16 +124,14 @@ export default function AccountPage() {
       )}
 
       {/* Aba de pedidos (CLIENTE) */}
-      {tab === "orders" && (
-        <OrdersSection />
-      )}
+      {tab === "orders" && <OrdersSection />}
     </div>
   );
 }
 
 /* --- Subcomponente para listar pedidos --- */
 function OrdersSection() {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function loadOrders() {
@@ -161,7 +159,7 @@ function OrdersSection() {
             </span>
           </div>
           <div className="space-y-2">
-            {order.items.map((item: any) => (
+            {order.items.map((item) => (
               <div key={item.id} className="flex justify-between text-sm border-b pb-1">
                 <span>{item.product.name} × {item.quantity}</span>
                 <span>R$ {(Number(item.price) * item.quantity).toFixed(2)}</span>

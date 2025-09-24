@@ -3,15 +3,36 @@
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
+// Tipagem do dashboard
+interface DashboardData {
+  totalProducts: number;
+  totalSold: number;
+  totalRevenue: number;
+  topProduct?: {
+    id: string;
+    name: string;
+    imageUrl: string;
+  } | null;
+}
+
 export default function VendorDashboard() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   async function loadDashboard() {
-    const res = await fetch("/api/vendor/dashboard");
-    const d = await res.json();
-    setData(d);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/vendor/dashboard");
+      if (!res.ok) {
+        throw new Error("Falha ao carregar dashboard");
+      }
+      const d: DashboardData = await res.json();
+      setData(d);
+    } catch (error) {
+      console.error(error);
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -19,8 +40,8 @@ export default function VendorDashboard() {
   }, []);
 
   if (loading) return <p className="p-6">Carregando dashboard...</p>;
-  if (!data || data.error)
-    return <p className="p-6 text-red-600">Erro: {data?.error || "Falha ao carregar"}</p>;
+  if (!data)
+    return <p className="p-6 text-red-600">Erro: Falha ao carregar dados</p>;
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -38,14 +59,18 @@ export default function VendorDashboard() {
           <h2 className="text-lg font-semibold text-blue-700 flex items-center justify-center gap-2">
             📦 Produtos Cadastrados
           </h2>
-          <p className="text-4xl font-bold mt-3 text-blue-800">{data.totalProducts}</p>
+          <p className="text-4xl font-bold mt-3 text-blue-800">
+            {data.totalProducts}
+          </p>
         </div>
 
         <div className="bg-orange-50 border border-orange-200 shadow rounded p-6 text-center hover:shadow-lg hover:scale-105 transition">
           <h2 className="text-lg font-semibold text-orange-700 flex items-center justify-center gap-2">
             🛒 Produtos Vendidos
           </h2>
-          <p className="text-4xl font-bold mt-3 text-orange-800">{data.totalSold}</p>
+          <p className="text-4xl font-bold mt-3 text-orange-800">
+            {data.totalSold}
+          </p>
         </div>
 
         <div className="bg-green-50 border border-green-200 shadow rounded p-6 text-center hover:shadow-lg hover:scale-105 transition">

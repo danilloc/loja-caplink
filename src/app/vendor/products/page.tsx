@@ -1,20 +1,54 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
+// Tipagem dos produtos
+interface Product {
+  id: string;
+  name: string;
+  price: number | string;
+  description: string;
+  imageUrl: string;
+}
+
+interface ProductsResponse {
+  products: Product[];
+  page: number;
+  totalPages: number;
+}
+
+// Tipagem do formulário
+interface ProductForm {
+  name: string;
+  price: string;
+  description: string;
+  imageUrl: string;
+}
+
 export default function VendorProducts() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [formVisible, setFormVisible] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
 
-  // formulário de CADASTRO
-  const [form, setForm] = useState({ name: "", price: "", description: "", imageUrl: "" });
+  // formulário de cadastro
+  const [form, setForm] = useState<ProductForm>({
+    name: "",
+    price: "",
+    description: "",
+    imageUrl: "",
+  });
 
   // edição
   const [editOpen, setEditOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ name: "", price: "", description: "", imageUrl: "" });
+  const [editForm, setEditForm] = useState<ProductForm>({
+    name: "",
+    price: "",
+    description: "",
+    imageUrl: "",
+  });
 
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +62,7 @@ export default function VendorProducts() {
   async function loadProducts(pageParam: number = 1) {
     try {
       const res = await fetch(`/api/products?page=${pageParam}&pageSize=9`);
-      const data = await res.json();
+      const data: ProductsResponse = await res.json();
 
       setProducts(Array.isArray(data.products) ? data.products : []);
       setPage(data.page);
@@ -92,7 +126,10 @@ export default function VendorProducts() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("/api/products/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/products/upload", {
+        method: "POST",
+        body: formData,
+      });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Erro ao importar produtos.");
@@ -108,7 +145,7 @@ export default function VendorProducts() {
   }
 
   // === EDIÇÃO ===
-  function openEdit(p: any) {
+  function openEdit(p: Product) {
     setEditId(p.id);
     setEditForm({
       name: p.name,
@@ -123,7 +160,12 @@ export default function VendorProducts() {
     e.preventDefault();
     if (!editId) return;
 
-    if (!editForm.name || !editForm.price || !editForm.description || !editForm.imageUrl) {
+    if (
+      !editForm.name ||
+      !editForm.price ||
+      !editForm.description ||
+      !editForm.imageUrl
+    ) {
       setError("Todos os campos são obrigatórios na edição.");
       return;
     }
@@ -208,7 +250,10 @@ export default function VendorProducts() {
 
       {/* Formulário de cadastro */}
       {formVisible && (
-        <form onSubmit={handleSubmit} className="space-y-3 mb-6 border p-4 rounded-lg shadow">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-3 mb-6 border p-4 rounded-lg shadow"
+        >
           <input
             placeholder="Nome"
             value={form.name}
@@ -233,7 +278,10 @@ export default function VendorProducts() {
             onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
             className="border p-2 w-full rounded"
           />
-          <button type="submit" className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          >
             Salvar Produto
           </button>
         </form>
@@ -241,7 +289,10 @@ export default function VendorProducts() {
 
       {/* Upload de CSV/Excel */}
       {uploadVisible && (
-        <form onSubmit={handleUpload} className="space-y-4 mb-6 border p-4 rounded-lg shadow">
+        <form
+          onSubmit={handleUpload}
+          className="space-y-4 mb-6 border p-4 rounded-lg shadow"
+        >
           <input
             type="file"
             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -257,12 +308,12 @@ export default function VendorProducts() {
               ⬆ Importar Arquivo
             </button>
 
-            <a
+            <Link
               href="/api/products/upload/template"
               className="text-blue-600 underline text-sm hover:text-blue-800"
             >
               📥 Baixar modelo de planilha
-            </a>
+            </Link>
           </div>
         </form>
       )}
@@ -272,11 +323,20 @@ export default function VendorProducts() {
       {products.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {products.map((p) => (
-            <div key={p.id} className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white">
-              <img src={p.imageUrl} alt={p.name} className="w-full h-40 object-cover rounded mb-3" />
+            <div
+              key={p.id}
+              className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
+            >
+              <img
+                src={p.imageUrl}
+                alt={p.name}
+                className="w-full h-40 object-cover rounded mb-3"
+              />
               <h3 className="font-bold text-lg">{p.name}</h3>
               <p className="text-sm text-gray-600 mb-2">{p.description}</p>
-              <p className="font-semibold text-green-600">R$ {Number(p.price).toFixed(2)}</p>
+              <p className="font-semibold text-green-600">
+                R$ {Number(p.price).toFixed(2)}
+              </p>
 
               <div className="flex gap-2 mt-3">
                 <button
@@ -334,29 +394,41 @@ export default function VendorProducts() {
                 className="border p-2 w-full rounded"
                 placeholder="Nome"
                 value={editForm.name}
-                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, name: e.target.value })
+                }
               />
               <input
                 className="border p-2 w-full rounded"
                 placeholder="Preço (R$)"
                 value={editForm.price}
-                onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, price: e.target.value })
+                }
               />
               <textarea
                 className="border p-2 w-full rounded"
                 placeholder="Descrição"
                 value={editForm.description}
-                onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, description: e.target.value })
+                }
               />
               <input
                 className="border p-2 w-full rounded"
                 placeholder="URL da Imagem"
                 value={editForm.imageUrl}
-                onChange={(e) => setEditForm({ ...editForm, imageUrl: e.target.value })}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, imageUrl: e.target.value })
+                }
               />
 
               <div className="flex gap-2 justify-end pt-2">
-                <button type="button" onClick={() => setEditOpen(false)} className="px-4 py-2 border rounded">
+                <button
+                  type="button"
+                  onClick={() => setEditOpen(false)}
+                  className="px-4 py-2 border rounded"
+                >
                   Cancelar
                 </button>
                 <button

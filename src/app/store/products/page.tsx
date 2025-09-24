@@ -3,25 +3,38 @@
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
+// Tipagem do produto
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number | string;
+  imageUrl: string;
+}
+
+interface ProductsResponse {
+  products: Product[];
+  page: number;
+  totalPages: number;
+}
+
 export default function StoreProducts() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
 
-  // 🔎 Buscar produtos
   async function loadProducts(p = 1, q = "") {
     const res = await fetch(
       `/api/products?page=${p}&pageSize=9&search=${encodeURIComponent(q)}`
     );
-    const data = await res.json();
+    const data: ProductsResponse = await res.json();
     setProducts(data.products || []);
     setPage(data.page || 1);
     setTotalPages(data.totalPages || 1);
   }
 
-  // ❤️ Favoritar
   async function handleFavorite(productId: string) {
     const res = await fetch("/api/favorites", {
       method: "POST",
@@ -41,7 +54,6 @@ export default function StoreProducts() {
     }
   }
 
-  // 🛒 Adicionar ao carrinho
   async function addToCart(productId: string) {
     const res = await fetch("/api/cart", {
       method: "POST",
@@ -63,13 +75,11 @@ export default function StoreProducts() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      {/* Cabeçalho */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Loja Caplink</h1>
         <UserActionsDropdown />
       </div>
 
-      {/* Busca */}
       <div className="flex mb-6">
         <input
           type="text"
@@ -87,7 +97,6 @@ export default function StoreProducts() {
         </button>
       </div>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {products.length > 0 ? (
           products.map((p) => {
@@ -107,7 +116,6 @@ export default function StoreProducts() {
                 <p className="font-semibold text-green-600">
                   R$ {Number(p.price).toFixed(2)}
                 </p>
-
                 <div className="flex flex-col gap-2 mt-3">
                   <button
                     onClick={() => handleFavorite(p.id)}
@@ -136,7 +144,6 @@ export default function StoreProducts() {
         )}
       </div>
 
-      {/* Paginação */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-6">
           <button

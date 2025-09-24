@@ -3,8 +3,24 @@
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
+// Tipagem para o produto
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number | string;
+  imageUrl: string;
+}
+
+// Tipagem para item do carrinho
+interface CartItem {
+  id: string;
+  product: Product;
+  quantity: number;
+}
+
 export default function CartPage() {
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
 
@@ -12,7 +28,7 @@ export default function CartPage() {
     try {
       const res = await fetch("/api/cart");
       const data = await res.json();
-      setCart(Array.isArray(data) ? data : []);
+      setCart(Array.isArray(data) ? (data as CartItem[]) : []);
     } catch (err) {
       console.error("Erro ao carregar carrinho:", err);
       setCart([]);
@@ -47,11 +63,8 @@ export default function CartPage() {
       }
 
       alert("✅ Compra finalizada com sucesso!");
-      // limpa a UI do carrinho
       setCart([]);
-      // se quiser, depois podemos redirecionar para /store/orders
-      // window.location.href = "/store/orders";
-    } catch (e) {
+    } catch {
       alert("Erro inesperado no checkout.");
     } finally {
       setCheckingOut(false);
@@ -106,7 +119,6 @@ export default function CartPage() {
 
               {/* Ações */}
               <div className="flex items-center gap-3">
-                {/* Diminuir */}
                 <button
                   onClick={() => updateQuantity(item.id, "decrement")}
                   className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
@@ -114,12 +126,10 @@ export default function CartPage() {
                   ➖
                 </button>
 
-                {/* Quantidade */}
                 <span className="min-w-[2rem] text-center font-semibold">
                   {item.quantity}
                 </span>
 
-                {/* Aumentar */}
                 <button
                   onClick={() => updateQuantity(item.id, "increment")}
                   className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
@@ -127,7 +137,6 @@ export default function CartPage() {
                   ➕
                 </button>
 
-                {/* Remover */}
                 <button
                   onClick={() => removeFromCart(item.id)}
                   className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
@@ -140,9 +149,7 @@ export default function CartPage() {
 
           {/* Total + Finalizar */}
           <div className="flex flex-col items-end gap-3 mt-4">
-            <p className="text-xl font-bold">
-              Total: R$ {total.toFixed(2)}
-            </p>
+            <p className="text-xl font-bold">Total: R$ {total.toFixed(2)}</p>
             <button
               onClick={handleCheckout}
               disabled={checkingOut}

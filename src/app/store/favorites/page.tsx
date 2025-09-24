@@ -3,8 +3,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+// Tipagem do produto favoritado
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number | string;
+  imageUrl: string;
+}
+
+// Tipagem do favorito
+interface Favorite {
+  id: string;
+  product: Product;
+}
+
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function loadFavorites() {
@@ -13,19 +28,17 @@ export default function FavoritesPage() {
       if (!res.ok) {
         throw new Error("Erro ao carregar favoritos");
       }
-      const data = await res.json();
-      setFavorites(data);
+      const data: Favorite[] = await res.json();
+      setFavorites(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao carregar favoritos:", err);
     } finally {
       setLoading(false);
     }
   }
 
   async function removeFavorite(id: string) {
-    await fetch(`/api/favorites/${id}`, {
-      method: "DELETE",
-    });
+    await fetch(`/api/favorites/${id}`, { method: "DELETE" });
     loadFavorites();
   }
 
@@ -41,8 +54,6 @@ export default function FavoritesPage() {
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Meus Favoritos ❤️</h1>
-
-        {/* Botão para ir até os produtos sempre visível */}
         <Link
           href="/store/products"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -60,7 +71,7 @@ export default function FavoritesPage() {
           {favorites.map((fav) => (
             <div
               key={fav.id}
-              className="border rounded-lg p-4 shadow hover:shadow-lg transition"
+              className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
             >
               <img
                 src={fav.product.imageUrl}
@@ -68,13 +79,10 @@ export default function FavoritesPage() {
                 className="w-full h-40 object-cover rounded mb-3"
               />
               <h2 className="font-bold">{fav.product.name}</h2>
-              <p className="text-sm text-gray-600 mb-2">
-                {fav.product.description}
-              </p>
+              <p className="text-sm text-gray-600 mb-2">{fav.product.description}</p>
               <p className="font-semibold text-green-600">
                 R$ {Number(fav.product.price).toFixed(2)}
               </p>
-
               <button
                 onClick={() => removeFavorite(fav.id)}
                 className="mt-3 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
