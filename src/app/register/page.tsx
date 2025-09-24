@@ -63,8 +63,7 @@ export default function RegisterPage() {
         <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-10 bg-gradient-to-br from-green-600 to-green-700 text-white text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Crie sua conta</h2>
           <p className="text-white/80 text-sm md:text-base">
-            Tenha acesso a soluções inteligentes para <br /> facilitar sua
-            jornada 💡
+            Tenha acesso a soluções inteligentes para <br /> facilitar sua jornada 💡
           </p>
         </div>
 
@@ -133,7 +132,7 @@ export default function RegisterPage() {
           )}
 
           <div className="mt-6 space-y-2">
-            {success && (
+            {success ? (
               <button
                 type="button"
                 onClick={() => router.push("/login")}
@@ -141,14 +140,15 @@ export default function RegisterPage() {
               >
                 Ir para Login
               </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => router.push("/login")}
+                className="bg-gray-100 text-black p-3 w-full rounded hover:bg-gray-200"
+              >
+                Já tenho conta / Ir para Login
+              </button>
             )}
-            <button
-              type="button"
-              onClick={() => router.push("/login")}
-              className="bg-gray-100 text-black p-3 w-full rounded hover:bg-gray-200"
-            >
-              Já tenho conta / Ir para Login
-            </button>
           </div>
         </div>
       </div>
