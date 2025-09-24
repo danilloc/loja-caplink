@@ -204,13 +204,13 @@ export default function VendorProducts() {
       const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
       if (!res.ok) {
         const d = await res.json();
-        alert(d.error || "Erro ao excluir.");
+        setError(d.error || "Erro ao excluir.");
         return;
       }
       setMessage("🗑️ Produto excluído.");
       loadProducts(page);
     } catch {
-      alert("Erro inesperado ao excluir.");
+      setError("Erro inesperado ao excluir.");
     }
   }
 
@@ -218,16 +218,24 @@ export default function VendorProducts() {
     <div className="p-6 max-w-6xl mx-auto">
       {/* Cabeçalho */}
       <div className="flex justify-between items-center border-b pb-4 mb-6">
-        <h1 className="text-3xl font-bold">🛒 Painel do Vendedor</h1>
+        <h1 className="text-3xl font-bold text-green-700">🛒 Painel do Vendedor</h1>
         <UserActionsDropdown />
       </div>
 
       {/* Mensagens */}
-      {message && <p className="text-green-600 mb-2">{message}</p>}
-      {error && <p className="text-red-600 mb-2">{error}</p>}
+      {message && (
+        <div className="bg-green-100 text-green-700 px-4 py-2 rounded mb-4">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+          {error}
+        </div>
+      )}
 
       {/* Botões de ação */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-wrap gap-4 mb-6">
         <button
           onClick={() => {
             setFormVisible(!formVisible);
@@ -252,7 +260,7 @@ export default function VendorProducts() {
       {formVisible && (
         <form
           onSubmit={handleSubmit}
-          className="space-y-3 mb-6 border p-4 rounded-lg shadow"
+          className="space-y-3 mb-6 border p-4 rounded-lg shadow bg-white"
         >
           <input
             placeholder="Nome"
@@ -280,7 +288,7 @@ export default function VendorProducts() {
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 w-full"
           >
             Salvar Produto
           </button>
@@ -291,7 +299,7 @@ export default function VendorProducts() {
       {uploadVisible && (
         <form
           onSubmit={handleUpload}
-          className="space-y-4 mb-6 border p-4 rounded-lg shadow"
+          className="space-y-4 mb-6 border p-4 rounded-lg shadow bg-white"
         >
           <input
             type="file"
@@ -319,9 +327,9 @@ export default function VendorProducts() {
       )}
 
       {/* Grid de produtos */}
-      <h2 className="font-bold text-xl mb-4">📦 Produtos cadastrados</h2>
+      <h2 className="font-bold text-xl mb-4 text-gray-700">📦 Produtos cadastrados</h2>
       {products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((p) => (
             <div
               key={p.id}
@@ -388,7 +396,7 @@ export default function VendorProducts() {
       {editOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-lg shadow-lg">
-            <h3 className="text-xl font-bold mb-4">Editar Produto</h3>
+            <h3 className="text-xl font-bold mb-4 text-green-700">Editar Produto</h3>
             <form onSubmit={handleEditSubmit} className="space-y-3">
               <input
                 className="border p-2 w-full rounded"

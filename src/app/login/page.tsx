@@ -39,20 +39,23 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-500 via-green-600 to-green-700">
-      <div className="flex w-full max-w-4xl bg-white shadow-2xl rounded-lg overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-500 via-green-600 to-green-700 p-4">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-2xl rounded-lg overflow-hidden">
+        
         {/* Lado esquerdo */}
-        <div className="flex-1 flex flex-col items-center justify-center p-10 bg-gradient-to-br from-green-600 to-green-700 text-white">
-          <h2 className="text-3xl font-bold mb-4">Bem-vindo à Caplink</h2>
-          <p className="text-center text-white/80">
+        <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-10 bg-gradient-to-br from-green-600 to-green-700 text-white text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            Bem-vindo à Caplink
+          </h2>
+          <p className="text-white/80 text-sm md:text-base">
             Faça login e tenha acesso a soluções rápidas <br /> e inteligentes 🚀
           </p>
         </div>
 
         {/* Lado direito */}
-        <div className="flex-1 p-8">
-          <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
-            🔑 Login
+        <div className="flex-1 p-6 md:p-8">
+          <h1 className="text-xl md:text-2xl font-bold text-center mb-6 text-green-700 flex items-center justify-center gap-2">
+            <span>🔑</span> Login
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -61,14 +64,14 @@ export default function LoginPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
             <input
               type="password"
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
 
             {error && (

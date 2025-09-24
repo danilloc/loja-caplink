@@ -3,24 +3,8 @@
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
-// Tipagem para o produto
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number | string;
-  imageUrl: string;
-}
-
-// Tipagem para item do carrinho
-interface CartItem {
-  id: string;
-  product: Product;
-  quantity: number;
-}
-
 export default function CartPage() {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
 
@@ -28,7 +12,7 @@ export default function CartPage() {
     try {
       const res = await fetch("/api/cart");
       const data = await res.json();
-      setCart(Array.isArray(data) ? (data as CartItem[]) : []);
+      setCart(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Erro ao carregar carrinho:", err);
       setCart([]);
@@ -64,7 +48,7 @@ export default function CartPage() {
 
       alert("✅ Compra finalizada com sucesso!");
       setCart([]);
-    } catch {
+    } catch (e) {
       alert("Erro inesperado no checkout.");
     } finally {
       setCheckingOut(false);
@@ -83,7 +67,7 @@ export default function CartPage() {
   );
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
       {/* Cabeçalho */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">🛒 Meu Carrinho</h1>
@@ -91,55 +75,61 @@ export default function CartPage() {
       </div>
 
       {cart.length === 0 ? (
-        <p>Seu carrinho está vazio.</p>
+        <p className="text-center text-gray-600 text-lg">
+          Seu carrinho está vazio.
+        </p>
       ) : (
         <div className="space-y-6">
           {cart.map((item) => (
             <div
               key={item.id}
-              className="border rounded-lg p-4 shadow hover:shadow-lg transition flex items-center justify-between bg-white"
+              className="border rounded-lg p-4 shadow-sm hover:shadow-md transition flex flex-col sm:flex-row items-center justify-between bg-white"
             >
               {/* Produto */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 w-full sm:w-auto">
                 <img
                   src={item.product.imageUrl}
                   alt={item.product.name}
                   className="w-24 h-24 object-cover rounded"
                 />
                 <div>
-                  <h2 className="font-bold">{item.product.name}</h2>
-                  <p className="text-sm text-gray-600">
+                  <h2 className="font-semibold text-lg">{item.product.name}</h2>
+                  <p className="text-sm text-gray-600 line-clamp-2">
                     {item.product.description}
                   </p>
-                  <p className="font-semibold text-green-600">
+                  <p className="font-semibold text-green-600 mt-1">
                     R$ {Number(item.product.price).toFixed(2)}
                   </p>
                 </div>
               </div>
 
               {/* Ações */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                {/* Diminuir */}
                 <button
                   onClick={() => updateQuantity(item.id, "decrement")}
-                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                  className="border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-100"
                 >
                   ➖
                 </button>
 
-                <span className="min-w-[2rem] text-center font-semibold">
+                {/* Quantidade */}
+                <span className="min-w-[2rem] text-center font-medium">
                   {item.quantity}
                 </span>
 
+                {/* Aumentar */}
                 <button
                   onClick={() => updateQuantity(item.id, "increment")}
-                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                  className="border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-100"
                 >
                   ➕
                 </button>
 
+                {/* Remover */}
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                  className="border border-red-500 text-red-500 px-3 py-1 rounded hover:bg-red-50"
                 >
                   ❌
                 </button>
@@ -148,12 +138,15 @@ export default function CartPage() {
           ))}
 
           {/* Total + Finalizar */}
-          <div className="flex flex-col items-end gap-3 mt-4">
-            <p className="text-xl font-bold">Total: R$ {total.toFixed(2)}</p>
+          <div className="flex flex-col items-end gap-3 mt-4 border-t pt-4">
+            <p className="text-xl font-bold">
+              Total:{" "}
+              <span className="text-green-600">R$ {total.toFixed(2)}</span>
+            </p>
             <button
               onClick={handleCheckout}
               disabled={checkingOut}
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-60"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-60 w-full sm:w-auto"
             >
               {checkingOut ? "Processando..." : "✅ Finalizar Compra"}
             </button>

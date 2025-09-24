@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
-// Tipagem do produto
 interface Product {
   id: string;
   name: string;
@@ -11,7 +10,6 @@ interface Product {
   price: number | string;
   imageUrl: string;
 }
-
 interface ProductsResponse {
   products: Product[];
   page: number;
@@ -24,6 +22,7 @@ export default function StoreProducts() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
+  const [message, setMessage] = useState("");
 
   async function loadProducts(p = 1, q = "") {
     const res = await fetch(
@@ -41,7 +40,6 @@ export default function StoreProducts() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productId }),
     });
-
     const data = await res.json();
     if (res.ok) {
       setFavorites((prev) =>
@@ -49,8 +47,6 @@ export default function StoreProducts() {
           ? [...prev, productId]
           : prev.filter((id) => id !== productId)
       );
-    } else {
-      alert("Erro: " + data.error);
     }
   }
 
@@ -62,10 +58,8 @@ export default function StoreProducts() {
     });
 
     if (res.ok) {
-      alert("✅ Produto adicionado ao carrinho!");
-    } else {
-      const data = await res.json();
-      alert("Erro: " + data.error);
+      setMessage("✅ Produto adicionado ao carrinho!");
+      setTimeout(() => setMessage(""), 3000);
     }
   }
 
@@ -74,9 +68,9 @@ export default function StoreProducts() {
   }, []);
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Loja Caplink</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">🛍️ Loja Caplink</h1>
         <UserActionsDropdown />
       </div>
 
@@ -97,7 +91,11 @@ export default function StoreProducts() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {message && (
+        <p className="text-green-600 text-center mb-4">{message}</p>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.length > 0 ? (
           products.map((p) => {
             const isFav = favorites.includes(p.id);
@@ -116,6 +114,7 @@ export default function StoreProducts() {
                 <p className="font-semibold text-green-600">
                   R$ {Number(p.price).toFixed(2)}
                 </p>
+
                 <div className="flex flex-col gap-2 mt-3">
                   <button
                     onClick={() => handleFavorite(p.id)}
@@ -138,7 +137,7 @@ export default function StoreProducts() {
             );
           })
         ) : (
-          <p className="text-gray-500 col-span-3 text-center">
+          <p className="text-gray-500 col-span-4 text-center">
             Nenhum produto encontrado.
           </p>
         )}

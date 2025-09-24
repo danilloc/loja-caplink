@@ -56,21 +56,22 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-500 via-green-600 to-green-700">
-      <div className="flex w-full max-w-4xl bg-white shadow-2xl rounded-lg overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-500 via-green-600 to-green-700 p-4">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-2xl rounded-lg overflow-hidden">
+        
         {/* Lado esquerdo */}
-        <div className="flex-1 flex flex-col items-center justify-center p-10 bg-gradient-to-br from-green-600 to-green-700 text-white">
-          <h2 className="text-3xl font-bold mb-4">Crie sua conta</h2>
-          <p className="text-center text-white/80">
+        <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-10 bg-gradient-to-br from-green-600 to-green-700 text-white text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Crie sua conta</h2>
+          <p className="text-white/80 text-sm md:text-base">
             Tenha acesso a soluções inteligentes para <br /> facilitar sua
             jornada 💡
           </p>
         </div>
 
         {/* Lado direito */}
-        <div className="flex-1 p-8">
-          <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
-            📝 Cadastro
+        <div className="flex-1 p-6 md:p-8">
+          <h1 className="text-xl md:text-2xl font-bold text-center mb-6 text-green-700 flex items-center justify-center gap-2">
+            <span>📝</span> Cadastro
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,7 +80,7 @@ export default function RegisterPage() {
               placeholder="Nome completo"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
 
             <input
@@ -87,7 +88,7 @@ export default function RegisterPage() {
               placeholder="Email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
 
             <input
@@ -95,7 +96,7 @@ export default function RegisterPage() {
               placeholder="Senha"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
 
             <input
@@ -105,13 +106,13 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setForm({ ...form, confirmPassword: e.target.value })
               }
-              className="bg-gray-50 border p-3 w-full rounded placeholder-gray-600 text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
 
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="bg-gray-50 border p-3 w-full rounded text-black focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="">Selecione...</option>
               <option value="CLIENTE">Cliente</option>
