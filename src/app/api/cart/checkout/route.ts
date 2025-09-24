@@ -27,8 +27,7 @@ export async function POST() {
   // Cria o pedido
   const order = await prisma.order.create({
     data: {
-      userId,
-      status: "PAGO", // status inicial
+      userId,  
       items: {
         create: cartItems.map((item) => ({
           productId: item.productId,
