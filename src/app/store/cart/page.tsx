@@ -3,15 +3,30 @@
 import { useEffect, useState } from "react";
 import UserActionsDropdown from "@/components/UserActionsDropdown";
 
+// Tipagem correta do produto e item do carrinho
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number | string;
+  imageUrl: string;
+}
+
+interface CartItem {
+  id: string;
+  product: Product;
+  quantity: number;
+}
+
 export default function CartPage() {
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
 
   async function loadCart() {
     try {
       const res = await fetch("/api/cart");
-      const data = await res.json();
+      const data: CartItem[] = await res.json();
       setCart(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Erro ao carregar carrinho:", err);
@@ -48,7 +63,7 @@ export default function CartPage() {
 
       alert("✅ Compra finalizada com sucesso!");
       setCart([]);
-    } catch (e) {
+    } catch {
       alert("Erro inesperado no checkout.");
     } finally {
       setCheckingOut(false);
@@ -105,7 +120,6 @@ export default function CartPage() {
 
               {/* Ações */}
               <div className="flex items-center gap-2 mt-4 sm:mt-0">
-                {/* Diminuir */}
                 <button
                   onClick={() => updateQuantity(item.id, "decrement")}
                   className="border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-100"
@@ -113,12 +127,10 @@ export default function CartPage() {
                   ➖
                 </button>
 
-                {/* Quantidade */}
                 <span className="min-w-[2rem] text-center font-medium">
                   {item.quantity}
                 </span>
 
-                {/* Aumentar */}
                 <button
                   onClick={() => updateQuantity(item.id, "increment")}
                   className="border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-100"
@@ -126,7 +138,6 @@ export default function CartPage() {
                   ➕
                 </button>
 
-                {/* Remover */}
                 <button
                   onClick={() => removeFromCart(item.id)}
                   className="border border-red-500 text-red-500 px-3 py-1 rounded hover:bg-red-50"
