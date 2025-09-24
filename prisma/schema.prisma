@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // pode trocar para PostgreSQL ou MySQL se preferir
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------
+// ENUMS
+// -------------------------------------------------------
+enum Role {
+  CLIENTE
+  VENDEDOR
+}
+
+// -------------------------------------------------------
+// MODELOS
+// -------------------------------------------------------
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  passwordHash String
+  role         Role
+  active       Boolean     @default(true) // controle de conta ativa/inativa
+  createdAt    DateTime    @default(now())
+
+  // relações
+  products     Product[]
+  favorites    Favorite[]
+  cart         CartItem[]
+  orders       Order[]
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  price       Decimal
+  description String
+  imageUrl    String
+  createdAt   DateTime    @default(now())
+  sellerId    String
+  seller      User        @relation(fields: [sellerId], references: [id])
+
+  active      Boolean     @default(true) // soft delete / ocultar
+
+  // relações
+  favorites   Favorite[]
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id        String       @id @default(cuid())
+  userId    String
+  createdAt DateTime     @default(now())
+  total     Decimal
+
+  user      User         @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Decimal   // preço unitário na hora da compra
+  
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+

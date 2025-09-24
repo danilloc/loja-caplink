@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🛒 Caplink Store – Desafio Técnico
 
-## Getting Started
+Este projeto foi desenvolvido com o objetivo de construir uma aplicação fullstack de e-commerce simplificado utilizando Next.js, Node.js e Prisma.
 
-First, run the development server:
+📌 Funcionalidades Implementadas
+🔑 Autenticação & Usuários
 
-```bash
+Cadastro e login com NextAuth.js.
+
+Dois papéis de usuário:
+
+Cliente → pode pesquisar, favoritar produtos, adicionar ao carrinho e finalizar compras.
+
+Vendedor → pode cadastrar, editar, excluir e importar produtos.
+
+Clientes podem excluir a própria conta (mantendo histórico de compras).
+
+Vendedores podem desativar a conta (produtos ficam ocultos).
+
+🛍️ Funcionalidades do Vendedor
+
+Cadastro de produtos via formulário.
+
+Importação de produtos via CSV/Excel.
+
+Dashboard com listagem de produtos.
+
+Edição e exclusão de produtos.
+
+Paginação para lidar com grandes volumes de dados.
+
+👤 Funcionalidades do Cliente
+
+Pesquisa de produtos com filtro no backend.
+
+Paginação da listagem de produtos.
+
+Favoritar produtos.
+
+Carrinho persistente.
+
+Finalizar compras com histórico armazenado.
+
+⚙️ Infraestrutura
+
+Next.js 15 (App Router)
+
+Prisma ORM com SQLite (pode ser adaptado para PostgreSQL/MySQL).
+
+NextAuth.js para autenticação.
+
+TailwindCSS para estilização.
+
+Estrutura de APIs em rotas do Next.js (/api/...).
+
+🚀 Como rodar localmente
+
+Clone o repositório:
+
+git clone https://github.com/seu-usuario/loja-caplink.git
+cd loja-caplink
+
+
+Instale as dependências:
+
+npm install
+# ou yarn install
+
+
+Configure as variáveis de ambiente (.env):
+
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_SECRET="uma_chave_secreta"
+NEXTAUTH_URL="http://localhost:3000"
+
+
+Rode as migrações e gere o client do Prisma:
+
+npx prisma migrate dev --name init
+npx prisma generate
+
+
+Inicie o servidor de desenvolvimento:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Acesse http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+📂 Estrutura do Projeto
+src/
+ ├─ app/
+ │   ├─ api/            # Rotas de API (Next.js)
+ │   ├─ auth/           # Login e registro
+ │   ├─ vendor/         # Painel do vendedor
+ │   └─ store/          # Loja (público/cliente)
+ ├─ lib/                # Configurações de Prisma e Auth
+ ├─ components/         # Componentes reutilizáveis
+ └─ prisma/             # Schema do banco de dados
 
-## Learn More
+📊 Modelo do Banco (Prisma)
 
-To learn more about Next.js, take a look at the following resources:
+User → usuários (clientes e vendedores).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Product → produtos cadastrados.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Favorite → produtos favoritados.
 
-## Deploy on Vercel
+CartItem → itens do carrinho.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Order & OrderItem → histórico de pedidos.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🧭 Roteiro de Uso
+🔑 Cadastro e Login
+
+Acesse /register para criar uma conta.
+
+Escolha entre Cliente ou Vendedor.
+
+Faça login em /login.
+
+🛍️ Vendedor
+
+Após login como vendedor, acesse /vendor/products.
+
+Cadastre novos produtos via:
+
+Formulário manual → preencha nome, preço, descrição e imagem.
+
+Upload de CSV/Excel → importe vários produtos de uma vez.
+
+Visualize a lista de produtos com paginação.
+
+Edite ou exclua produtos diretamente no painel.
+
+👤 Cliente
+
+Após login como cliente, acesse /store/products.
+
+Pesquise produtos pela barra de busca (filtro feito no backend).
+
+Use a paginação para navegar entre os resultados.
+
+Favoritar produtos para salvar na lista de favoritos.
+
+Adicione itens ao carrinho.
+
+Finalize a compra → gera um pedido no histórico.
+
+Consulte suas compras anteriores no histórico de pedidos.
+
+📦 Deploy
+
+O deploy pode ser feito facilmente na Vercel
+.
+Basta conectar o repositório e configurar as variáveis de ambiente no painel da Vercel.
+
+🧑‍💻 Autor
+
+Desenvolvido por Danillo Coelho Brito.
