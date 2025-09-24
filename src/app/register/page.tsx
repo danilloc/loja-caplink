@@ -48,7 +48,7 @@ export default function RegisterPage() {
       } else {
         setMessage(`❌ Erro: ${data.error || "Falha no cadastro"}`);
       }
-    } catch (err) {
+    } catch  {
       setMessage("❌ Erro de rede ou servidor offline");
     } finally {
       setLoading(false);

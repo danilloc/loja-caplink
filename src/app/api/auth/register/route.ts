@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import { z } from "zod"; // Validação opcional com Zod
+import { z } from "zod";
 
 //  Esquema de validação dos dados recebidos
 const registerSchema = z.object({
@@ -13,16 +13,12 @@ const registerSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // Pega o JSON do body
     const body = await req.json();
 
-    // Valida com Zod (se der erro, já responde 400)
     const { name, email, password, role } = registerSchema.parse(body);
 
-    // Normaliza o e-mail (evita duplicados com maiúsculas/espaços)
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Verifica se já existe usuário com o mesmo e-mail
     const existing = await prisma.user.findUnique({
       where: { email: normalizedEmail },
     });
@@ -34,10 +30,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Criptografa a senha antes de salvar
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Cria o usuário no banco
     const user = await prisma.user.create({
       data: {
         name,
@@ -47,7 +41,6 @@ export async function POST(req: Request) {
       },
     });
 
-    // Retorno limpo e claro
     return NextResponse.json(
       {
         message: "Usuário criado com sucesso",
@@ -59,11 +52,11 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch (err: any) {
-    // Caso o erro venha do Zod → retorna 400 com mensagens de validação
-    if (err.name === "ZodError") {
+  } catch (err) {
+    // ZodError
+    if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: err.errors.map((e: any) => e.message).join(", ") },
+        { error: err.errors.map((e) => e.message).join(", ") },
         { status: 400 }
       );
     }
