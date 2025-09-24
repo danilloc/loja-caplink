@@ -28,7 +28,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Buscar sessão para redirecionar baseado no role
     const res = await fetch("/api/auth/session");
     const session = await res.json();
 
@@ -40,48 +39,59 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">🔑 Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-500 via-green-600 to-green-700">
+      <div className="flex w-full max-w-4xl bg-white shadow-2xl rounded-lg overflow-hidden">
+        {/* Lado esquerdo */}
+        <div className="flex-1 flex flex-col items-center justify-center p-10 bg-gradient-to-br from-green-600 to-green-700 text-white">
+          <h2 className="text-3xl font-bold mb-4">Bem-vindo à Caplink</h2>
+          <p className="text-center text-white/80">
+            Faça login e tenha acesso a soluções rápidas <br /> e inteligentes 🚀
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+        {/* Lado direito */}
+        <div className="flex-1 p-8">
+          <h1 className="text-2xl font-bold text-center mb-6">🔑 Login</h1>
 
-          {error && (
-            <p className="bg-red-100 text-red-700 text-sm p-2 rounded">
-              {error}
-            </p>
-          )}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border p-3 w-full rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 text-white p-3 w-full rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? "Entrando..." : "Entrar"}
-          </button>
+            {error && (
+              <p className="bg-red-100 text-red-700 text-sm p-2 rounded">
+                {error}
+              </p>
+            )}
 
-          <button
-            type="button"
-            onClick={() => router.push("/register")}
-            className="bg-green-600 text-white p-3 w-full rounded hover:bg-green-700"
-          >
-            Criar Conta
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-green-600 text-white p-3 w-full rounded hover:bg-green-700 disabled:opacity-50"
+            >
+              {loading ? "Entrando..." : "Entrar"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => router.push("/register")}
+              className="bg-gray-100 text-black p-3 w-full rounded hover:bg-gray-200"
+            >
+              Criar Conta
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
