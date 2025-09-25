@@ -18,6 +18,14 @@ interface Favorite {
   product: Product;
 }
 
+// Função utilitária para formatar preços no padrão brasileiro
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,7 +104,7 @@ export default function FavoritesPage() {
                   {fav.product.description}
                 </p>
                 <p className="font-semibold text-green-600">
-                  R$ {Number(fav.product.price).toFixed(2)}
+                  {formatPrice(Number(fav.product.price))}
                 </p>
                 <button
                   onClick={() => removeFavorite(fav.id)}

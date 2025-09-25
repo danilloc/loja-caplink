@@ -5,6 +5,14 @@ import UserActionsDropdown from "@/components/UserActionsDropdown";
 import Image from "next/image";
 import { User, Product, Order } from "@/types";
 
+// Função utilitária para formatar preços em BRL
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
 export default function AccountPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -162,12 +170,12 @@ function OrdersSection() {
             {order.items.map((item) => (
               <div key={item.id} className="flex justify-between text-sm border-b pb-1">
                 <span>{item.product.name} × {item.quantity}</span>
-                <span>R$ {(Number(item.price) * item.quantity).toFixed(2)}</span>
+                <span>{formatPrice(Number(item.price) * item.quantity)}</span>
               </div>
             ))}
           </div>
           <div className="text-right font-bold mt-3">
-            Total: R$ {Number(order.total).toFixed(2)}
+            Total: {formatPrice(Number(order.total))}
           </div>
         </div>
       ))}

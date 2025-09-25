@@ -16,6 +16,14 @@ interface ProductsResponse {
   totalPages: number;
 }
 
+// 🔥 Função para formatar preço corretamente em BRL
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
 export default function StoreProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -112,7 +120,7 @@ export default function StoreProducts() {
                 <h2 className="font-bold">{p.name}</h2>
                 <p className="text-sm text-gray-600 mb-2">{p.description}</p>
                 <p className="font-semibold text-green-600">
-                  R$ {Number(p.price).toFixed(2)}
+                  {formatPrice(Number(p.price))}
                 </p>
 
                 <div className="flex flex-col gap-2 mt-3">

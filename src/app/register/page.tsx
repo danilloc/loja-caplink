@@ -45,6 +45,20 @@ export default function RegisterPage() {
       if (res.ok) {
         setMessage("✅ Usuário criado com sucesso!");
         setSuccess(true);
+
+        // Limpa o formulário
+        setForm({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          role: "",
+        });
+
+        // Redireciona automaticamente depois de 2s
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
       } else {
         setMessage(`❌ Erro: ${data.error || "Falha no cadastro"}`);
       }
@@ -132,23 +146,13 @@ export default function RegisterPage() {
           )}
 
           <div className="mt-6 space-y-2">
-            {success ? (
-              <button
-                type="button"
-                onClick={() => router.push("/login")}
-                className="bg-green-600 text-white p-3 w-full rounded hover:bg-green-700"
-              >
-                Ir para Login
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => router.push("/login")}
-                className="bg-gray-100 text-black p-3 w-full rounded hover:bg-gray-200"
-              >
-                Já tenho conta / Ir para Login
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => router.push("/login")}
+              className="bg-gray-100 text-black p-3 w-full rounded hover:bg-gray-200"
+            >
+              Já tenho conta / Ir para Login
+            </button>
           </div>
         </div>
       </div>

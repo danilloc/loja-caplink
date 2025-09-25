@@ -18,6 +18,14 @@ interface CartItem {
   quantity: number;
 }
 
+// Função utilitária para formatar moeda em BRL
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+}
+
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,7 +121,7 @@ export default function CartPage() {
                     {item.product.description}
                   </p>
                   <p className="font-semibold text-green-600 mt-1">
-                    R$ {Number(item.product.price).toFixed(2)}
+                    {formatPrice(Number(item.product.price))}
                   </p>
                 </div>
               </div>
@@ -152,7 +160,7 @@ export default function CartPage() {
           <div className="flex flex-col items-end gap-3 mt-4 border-t pt-4">
             <p className="text-xl font-bold">
               Total:{" "}
-              <span className="text-green-600">R$ {total.toFixed(2)}</span>
+              <span className="text-green-600">{formatPrice(total)}</span>
             </p>
             <button
               onClick={handleCheckout}
