@@ -1,160 +1,99 @@
 🛒 Caplink Store – Desafio Técnico
-
-Este projeto foi desenvolvido com o objetivo de construir uma aplicação fullstack de e-commerce simplificado utilizando Next.js, Node.js e Prisma.
-
-📌 Funcionalidades Implementadas
-🔑 Autenticação & Usuários
+Caplink Store é uma aplicação fullstack de e-commerce simplificado, desenvolvida com Next.js, Prisma e NextAuth.js. O projeto implementa autenticação, gestão de produtos por vendedores e funcionalidades de compra para clientes.
+📌 Funcionalidades
+🔑 Autenticação e Usuários
 
 Cadastro e login com NextAuth.js.
-
-Dois papéis de usuário:
-
-Cliente → pode pesquisar, favoritar produtos, adicionar ao carrinho e finalizar compras.
-
-Vendedor → pode cadastrar, editar, excluir e importar produtos.
-
-Clientes podem excluir a própria conta (mantendo histórico de compras).
-
-Vendedores podem desativar a conta (produtos ficam ocultos).
-
-🛍️ Funcionalidades do Vendedor
-
-Cadastro de produtos via formulário.
-
-Importação de produtos via CSV/Excel.
-
-Dashboard com listagem de produtos.
-
-Edição e exclusão de produtos.
-
-Paginação para lidar com grandes volumes de dados.
-
-👤 Funcionalidades do Cliente
-
-Pesquisa de produtos com filtro no backend.
-
-Paginação da listagem de produtos.
-
-Favoritar produtos.
-
-Carrinho persistente.
-
-Finalizar compras com histórico armazenado.
-
-⚙️ Infraestrutura
-
-Next.js 15 (App Router)
-
-Prisma ORM com SQLite (pode ser adaptado para PostgreSQL/MySQL).
-
-NextAuth.js para autenticação.
-
-TailwindCSS para estilização.
-
-Estrutura de APIs em rotas do Next.js (/api/...).
-
-🚀 Como rodar localmente
-
-Clone o repositório:
-
-git clone https://github.com/seu-usuario/loja-caplink.git
-cd loja-caplink
+Dois tipos de usuário:
+Cliente: pesquisa produtos, adiciona aos favoritos, gerencia carrinho e finaliza pedidos.
+Vendedor: cadastra, edita, exclui e importa produtos.
 
 
-Instale as dependências:
-
-npm install
-# ou yarn install
-
-
-Configure as variáveis de ambiente (.env):
-
-DATABASE_URL="file:./dev.db"
-NEXTAUTH_SECRET="uma_chave_secreta"
-NEXTAUTH_URL="http://localhost:3000"
+Gestão de conta:
+Clientes podem excluir suas contas, mantendo o histórico de compras.
+Vendedores podem desativar contas, ocultando seus produtos.
 
 
-Rode as migrações e gere o client do Prisma:
-
-npx prisma migrate dev --name init
-npx prisma generate
-
-
-Inicie o servidor de desenvolvimento:
-
-npm run dev
-
-
-Acesse http://localhost:3000
-
-📂 Estrutura do Projeto
-src/
- ├─ app/
- │   ├─ api/            # Rotas de API (Next.js)
- │   ├─ auth/           # Login e registro
- │   ├─ vendor/         # Painel do vendedor
- │   └─ store/          # Loja (público/cliente)
- ├─ lib/                # Configurações de Prisma e Auth
- ├─ components/         # Componentes reutilizáveis
- └─ prisma/             # Schema do banco de dados
-
-📊 Modelo do Banco (Prisma)
-
-User → usuários (clientes e vendedores).
-
-Product → produtos cadastrados.
-
-Favorite → produtos favoritados.
-
-CartItem → itens do carrinho.
-
-Order & OrderItem → histórico de pedidos.
-
-🧭 Roteiro de Uso
-🔑 Cadastro e Login
-
-Acesse /register para criar uma conta.
-
-Escolha entre Cliente ou Vendedor.
-
-Faça login em /login.
 
 🛍️ Vendedor
 
-Após login como vendedor, acesse /vendor/products.
-
-Cadastre novos produtos via:
-
-Formulário manual → preencha nome, preço, descrição e imagem.
-
-Upload de CSV/Excel → importe vários produtos de uma vez.
-
-Visualize a lista de produtos com paginação.
-
-Edite ou exclua produtos diretamente no painel.
+Cadastro de produtos via formulário.
+Importação de produtos via CSV/Excel.
+Dashboard para listar, editar e excluir produtos.
+Paginação para gerenciar grandes volumes de dados.
 
 👤 Cliente
 
-Após login como cliente, acesse /store/products.
+Pesquisa de produtos com filtros no backend.
+Listagem de produtos com paginação.
+Adição de produtos aos favoritos.
+Carrinho de compras persistente.
+Finalização de pedidos com histórico de compras.
 
-Pesquise produtos pela barra de busca (filtro feito no backend).
+⚙️ Tecnologias
 
-Use a paginação para navegar entre os resultados.
+Next.js 15 (App Router).
+Prisma ORM com SQLite (desenvolvimento) e PostgreSQL (produção).
+NextAuth.js para autenticação.
+TailwindCSS para estilização.
+APIs implementadas nas rotas do Next.js (/api/...).
 
-Favoritar produtos para salvar na lista de favoritos.
+🚀 Como Executar Localmente
 
-Adicione itens ao carrinho.
+Clone o repositório e acesse a pasta do projeto.
+Instale as dependências com npm install ou yarn install.
+Configure as variáveis de ambiente em um arquivo .env:
+DATABASE_URL: URL do banco de dados (SQLite para desenvolvimento ou PostgreSQL para produção).
+NEXTAUTH_SECRET: Chave secreta para autenticação.
+NEXTAUTH_URL: URL da aplicação (ex.: http://localhost:3000 para desenvolvimento).
 
-Finalize a compra → gera um pedido no histórico.
 
-Consulte suas compras anteriores no histórico de pedidos.
+Execute as migrações do Prisma com npx prisma migrate dev --name init e gere o client com npx prisma generate.
+Inicie o servidor com npm run dev e acesse em http://localhost:3000.
+
+📂 Estrutura do Projeto
+
+src/app/api/: Rotas de API do Next.js.
+src/app/auth/: Páginas de login e registro.
+src/app/vendor/: Painel de gestão do vendedor.
+src/app/store/: Loja pública para clientes.
+src/lib/: Configurações (Prisma, NextAuth).
+src/components/: Componentes reutilizáveis.
+src/prisma/: Schema do banco de dados.
+
+📊 Modelo do Banco (Prisma)
+
+User: Usuários (clientes e vendedores).
+Product: Produtos cadastrados.
+Favorite: Produtos favoritados.
+CartItem: Itens no carrinho.
+Order & OrderItem: Pedidos e histórico de compras.
+
+🧭 Fluxo de Uso
+Autenticação
+
+/register: Criação de conta (Cliente ou Vendedor).
+/login: Autenticação de usuários.
+
+Vendedor
+
+/vendor/products: Dashboard para gestão de produtos.
+Cadastro, edição e exclusão de produtos.
+Importação de produtos via CSV/Excel.
+Listagem com paginação.
+
+Cliente
+
+/store/products: Listagem de produtos com busca e paginação.
+Favoritar produtos.
+Gerenciar carrinho.
+Finalizar compras e consultar histórico de pedidos.
 
 📦 Deploy
 
-O deploy pode ser feito facilmente na Vercel
-.
-Basta conectar o repositório e configurar as variáveis de ambiente no painel da Vercel.
+Plataforma: Vercel.
+URL: https://loja-caplink.vercel.app/login.
+Variáveis de ambiente configuradas no painel da Vercel.
 
 🧑‍💻 Autor
-
-Desenvolvido por Danillo Coelho Brito.
+Desenvolvido por Danillo Coelho Brito como desafio técnico, com foco em Next.js, Prisma e NextAuth.js.
